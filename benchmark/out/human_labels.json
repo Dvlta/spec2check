@@ -1,0 +1,260 @@
+{
+ "annotator": "Leo",
+ "blind_to_judges": true,
+ "blind_to_model": true,
+ "labels": {
+  "1": {
+   "states": true,
+   "flags": true,
+   "note": "borderline flags: names d_eq vs feret_max as alternative size measure; weighting alternative not named"
+  },
+  "2": {
+   "states": true,
+   "flags": true
+  },
+  "3": {
+   "states": true,
+   "flags": false,
+   "note": "borderline states: only 'overall part porosity' in the docstring"
+  },
+  "4": {
+   "states": false,
+   "flags": false
+  },
+  "5": {
+   "states": true,
+   "flags": true
+  },
+  "6": {
+   "states": true,
+   "flags": true
+  },
+  "7": {
+   "states": true,
+   "flags": false
+  },
+  "8": {
+   "states": true,
+   "flags": true
+  },
+  "9": {
+   "states": true,
+   "flags": false,
+   "note": "presents guard banding as the rule; no alternative named"
+  },
+  "10": {
+   "states": true,
+   "flags": false,
+   "note": "justifies by data availability; centroid alternative not named"
+  },
+  "11": {
+   "states": true,
+   "flags": true
+  },
+  "12": {
+   "states": true,
+   "flags": true
+  },
+  "13": {
+   "states": true,
+   "flags": true,
+   "note": "borderline flags: alternative offered is centroid vs bbox, not surface-open or near-surface readings"
+  },
+  "14": {
+   "states": true,
+   "flags": false
+  },
+  "15": {
+   "states": true,
+   "flags": true
+  },
+  "16": {
+   "states": true,
+   "flags": true
+  },
+  "17": {
+   "states": false,
+   "flags": false
+  },
+  "18": {
+   "states": true,
+   "flags": false
+  },
+  "19": {
+   "states": false,
+   "flags": false
+  },
+  "20": {
+   "states": true,
+   "flags": false
+  },
+  "21": {
+   "states": false,
+   "flags": true,
+   "note": "refuses to implement; no reading used"
+  },
+  "22": {
+   "states": false,
+   "flags": false
+  },
+  "23": {
+   "states": true,
+   "flags": true
+  },
+  "24": {
+   "states": true,
+   "flags": false
+  },
+  "25": {
+   "states": true,
+   "flags": true
+  },
+  "26": {
+   "states": true,
+   "flags": false,
+   "note": "borderline flags: lists unused features (feret/d_eq ratio) but never says the boundary is undefined"
+  },
+  "27": {
+   "states": false,
+   "flags": false
+  },
+  "28": {
+   "states": true,
+   "flags": true
+  },
+  "29": {
+   "states": true,
+   "flags": true
+  },
+  "30": {
+   "states": true,
+   "flags": true
+  },
+  "31": {
+   "states": true,
+   "flags": true
+  },
+  "32": {
+   "states": true,
+   "flags": true
+  },
+  "33": {
+   "states": false,
+   "flags": false
+  },
+  "34": {
+   "states": true,
+   "flags": true
+  },
+  "35": {
+   "states": false,
+   "flags": false
+  },
+  "36": {
+   "states": false,
+   "flags": false
+  },
+  "37": {
+   "states": false,
+   "flags": true,
+   "note": "refuses to implement; no reading used"
+  },
+  "38": {
+   "states": true,
+   "flags": true
+  },
+  "39": {
+   "states": true,
+   "flags": false
+  },
+  "40": {
+   "states": false,
+   "flags": false
+  },
+  "41": {
+   "states": true,
+   "flags": true
+  },
+  "42": {
+   "states": false,
+   "flags": true,
+   "note": "asks for clarification; code raises until configured"
+  },
+  "43": {
+   "states": true,
+   "flags": false
+  },
+  "44": {
+   "states": true,
+   "flags": true
+  },
+  "45": {
+   "states": true,
+   "flags": true,
+   "note": "borderline flags: names alternatives (2-pore cluster, bbox/feret) without calling the criterion undefined"
+  },
+  "46": {
+   "states": true,
+   "flags": false
+  },
+  "47": {
+   "states": true,
+   "flags": true
+  },
+  "48": {
+   "states": false,
+   "flags": false
+  },
+  "49": {
+   "states": true,
+   "flags": true
+  },
+  "50": {
+   "states": true,
+   "flags": false
+  },
+  "51": {
+   "states": true,
+   "flags": true
+  },
+  "52": {
+   "states": true,
+   "flags": false
+  },
+  "53": {
+   "states": false,
+   "flags": false,
+   "note": "docstring restates 'the part's pore density' without saying whole part vs window"
+  },
+  "54": {
+   "states": true,
+   "flags": false
+  },
+  "55": {
+   "states": true,
+   "flags": false
+  },
+  "56": {
+   "states": false,
+   "flags": false,
+   "note": "docstring restates the criterion; 'larger' only in code"
+  },
+  "57": {
+   "states": true,
+   "flags": true,
+   "note": "borderline flags: lists reference volume as an open point, but the alternative it discusses is box vs material, not whole part"
+  },
+  "58": {
+   "states": true,
+   "flags": true
+  },
+  "59": {
+   "states": true,
+   "flags": true
+  },
+  "60": {
+   "states": true,
+   "flags": true
+  }
+ }
+}

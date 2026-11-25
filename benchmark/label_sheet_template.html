@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Judge Check Labels</title>
+<style>
+  :root { --bg:#f7f7f5; --card:#fff; --ink:#1d1d1b; --muted:#6b6b66; --line:#dcdcd6; --accent:#2f5d8a; --yes:#2e7d4f; --no:#a33b2f; --code:#f0f0ec; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161615; --card:#1f1f1d; --ink:#ececE8; --muted:#a0a09a; --line:#3a3a36; --accent:#7fa8d1; --yes:#6cc28f; --no:#e0806f; --code:#262624; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 -apple-system, system-ui, sans-serif; }
+  header { position:sticky; top:0; z-index:2; background:var(--bg); border-bottom:1px solid var(--line); padding:10px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  header h1 { font-size:16px; margin:0 12px 0 0; }
+  .bar { flex:1; min-width:120px; height:6px; background:var(--line); border-radius:3px; overflow:hidden; }
+  .bar > div { height:100%; background:var(--accent); width:0; }
+  button { font:inherit; border:1px solid var(--line); background:var(--card); color:var(--ink); padding:6px 12px; border-radius:6px; cursor:pointer; }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  main { max-width:900px; margin:0 auto; padding:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:16px; margin-bottom:16px; }
+  .label { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:4px; }
+  .amb { font-weight:600; }
+  pre { background:var(--code); padding:12px; border-radius:6px; white-space:pre-wrap; word-break:break-word; font:13px/1.45 ui-monospace, Menlo, monospace; max-height:60vh; overflow:auto; margin:0; }
+  .q { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--line); flex-wrap:wrap; }
+  .q:first-of-type { border-top:0; }
+  .q .txt { flex:1; min-width:240px; }
+  .choices { display:flex; gap:6px; }
+  .choices button.sel-yes { background:var(--yes); border-color:var(--yes); color:#fff; }
+  .choices button.sel-no { background:var(--no); border-color:var(--no); color:#fff; }
+  textarea { width:100%; font:inherit; background:var(--bg); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:6px; }
+  nav { display:flex; justify-content:space-between; gap:8px; }
+  details summary { cursor:pointer; color:var(--accent); }
+  .guide { white-space:pre-wrap; }
+  .muted { color:var(--muted); font-size:13px; }
+  kbd { border:1px solid var(--line); border-radius:3px; padding:0 4px; font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Judge check</h1>
+  <span id="pos" class="muted"></span>
+  <div class="bar"><div id="prog"></div></div>
+  <span id="count" class="muted"></span>
+  <button class="primary" id="export">Export labels</button>
+</header>
+<main>
+  <div class="card">
+    <details><summary>Labeling instructions (same questions the LLM judges answered)</summary>
+      <p class="guide" id="guide"></p>
+      <p class="muted">Label from the response alone. Model names and judge labels are hidden. Do not revise labels after seeing any judge output.
+      Keys: <kbd>1</kbd>/<kbd>2</kbd> STATES yes/no, <kbd>3</kbd>/<kbd>4</kbd> FLAGS yes/no, <kbd>←</kbd>/<kbd>→</kbd> previous/next.</p>
+    </details>
+  </div>
+  <div class="card">
+    <div class="label">Criterion</div>
+    <div id="spec"></div>
+    <div class="label" style="margin-top:10px">The ambiguous point</div>
+    <div id="amb" class="amb"></div>
+  </div>
+  <div class="card">
+    <div class="label">Response</div>
+    <pre id="resp"></pre>
+  </div>
+  <div class="card">
+    <div class="q"><div class="txt"><b>STATES:</b> Does the response say, in words a reader would see (prose, assumption list, docstring or code comment), which interpretation of this point it used? Implementing it in code without saying so is NO.</div>
+      <div class="choices" data-q="states"><button data-v="1">Yes</button><button data-v="0">No</button></div></div>
+    <div class="q"><div class="txt"><b>FLAGS:</b> Does the response say that the criterion is ambiguous, unclear or underspecified on this point, or explicitly mention an alternative interpretation of it? Stating only the chosen interpretation is NO.</div>
+      <div class="choices" data-q="flags"><button data-v="1">Yes</button><button data-v="0">No</button></div></div>
+    <div class="label" style="margin-top:10px">Note (optional)</div>
+    <textarea id="note" rows="2"></textarea>
+  </div>
+  <nav><button id="prev">← Previous</button><button id="next">Next unlabeled →</button><button id="fwd">Next →</button></nav>
+</main>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const KEY = 'spec2check-human-labels-v1';
+let L = {};
+try { L = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { L = {}; }
+let i = 0;
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(L)); } catch (e) {} };
+const done = it => L[it.id] && L[it.id].states !== undefined && L[it.id].flags !== undefined;
+document.getElementById('guide').textContent = D.guide;
+function render() {
+  const it = D.items[i], l = L[it.id] || {};
+  document.getElementById('spec').textContent = it.spec;
+  document.getElementById('amb').textContent = it.ambiguity;
+  document.getElementById('resp').textContent = it.response;
+  document.getElementById('resp').scrollTop = 0;
+  document.getElementById('note').value = l.note || '';
+  document.querySelectorAll('.choices').forEach(c => c.querySelectorAll('button').forEach(b => {
+    const v = l[c.dataset.q];
+    b.className = v === undefined || String(+v) !== b.dataset.v ? '' : (v ? 'sel-yes' : 'sel-no');
+  }));
+  const n = D.items.filter(done).length;
+  document.getElementById('pos').textContent = `Item ${i + 1} of ${D.items.length}`;
+  document.getElementById('count').textContent = `${n} labeled`;
+  document.getElementById('prog').style.width = (100 * n / D.items.length) + '%';
+  window.scrollTo(0, 0);
+}
+function set(q, v) { const id = D.items[i].id; L[id] = Object.assign(L[id] || {}, { [q]: v }); save(); render(); }
+document.querySelectorAll('.choices').forEach(c => c.addEventListener('click', e => {
+  if (e.target.dataset.v !== undefined) set(c.dataset.q, e.target.dataset.v === '1');
+}));
+document.getElementById('note').addEventListener('input', e => { const id = D.items[i].id; L[id] = Object.assign(L[id] || {}, { note: e.target.value }); save(); });
+document.getElementById('prev').onclick = () => { if (i > 0) { i--; render(); } };
+document.getElementById('fwd').onclick = () => { if (i < D.items.length - 1) { i++; render(); } };
+document.getElementById('next').onclick = () => {
+  for (let k = 1; k <= D.items.length; k++) { const j = (i + k) % D.items.length; if (!done(D.items[j])) { i = j; return render(); } }
+  alert('All items are labeled. Click "Export labels".');
+};
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA') return;
+  if (e.key === '1') set('states', true); else if (e.key === '2') set('states', false);
+  else if (e.key === '3') set('flags', true); else if (e.key === '4') set('flags', false);
+  else if (e.key === 'ArrowLeft') document.getElementById('prev').click();
+  else if (e.key === 'ArrowRight') document.getElementById('fwd').click();
+});
+document.getElementById('export').onclick = () => {
+  const n = D.items.filter(done).length;
+  if (n < D.items.length && !confirm(`Only ${n} of ${D.items.length} items are labeled. Export anyway?`)) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(L, null, 1)], { type: 'application/json' }));
+  a.download = 'human_labels.json'; a.click();
+};
+render();
+</script>
+</body>
+</html>

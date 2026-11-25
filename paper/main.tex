@@ -1,0 +1,146 @@
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage{aaai2027}  % DO NOT CHANGE THIS
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{natbib}  % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{caption} % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\frenchspacing  % DO NOT CHANGE THIS
+\setlength{\pdfpagewidth}{8.5in} % DO NOT CHANGE THIS
+\setlength{\pdfpageheight}{11in} % DO NOT CHANGE THIS
+\usepackage{booktabs}
+\pdfinfo{
+/TemplateVersion (2027.2)
+}
+\setcounter{secnumdepth}{0}
+
+\title{Prompting Makes Inspection Copilots State Their Assumptions,\\but Not Which Ones Matter}
+\author{
+    Leo Sun
+}
+\affiliations{
+    University of California, Los Angeles\\
+    leosun15@ucla.edu
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Large language models (LLMs) can turn written porosity acceptance criteria for industrial CT into executable accept/reject checks, but such criteria are often ambiguous, and a copilot that silently picks one reading moves the decision boundary. We introduce Spec2Check, 45 porosity criteria, 21 of them ambiguous with two or three author-defined readings implemented as executable references, scored by execution on synthetic CT pore tables. Across 1{,}593 responses from Claude Opus 5.5, GPT-5.6 Sol and Gemini 4 Neon, all checks for the finalized fully specified criteria pass. Unprompted, GPT and Gemini leave their reading of an ambiguous criterion unstated in 38--60\% and 13--44\% of cases. Prompting largely fixes visibility: asked to list assumptions, the models state their reading in 186 of 189 responses. It does not make the consequential choice stand out. In lists of five to ten items, GPT calls the point ambiguous or names an alternative in only 5--6 of 63 responses, and for measurement uncertainty only 10 of 27 plain responses flagged a decision rule whose alternatives change 24.6\% of verdicts. The models also share defaults on which their checks agree, so comparing checks cannot reveal them; hand-written alternative readings can. Executing checks against each other does expose implementation errors, such as an identifier mismatch that made one model's checks accept every part.
+\end{abstract}
+
+\section{Introduction}
+Industrial CT inspection of cast and additively manufactured parts produces, for every scanned part, a table of internal pores with their position, volume and shape. Whether the part ships is then decided by acceptance criteria written in natural language: company specifications, customer drawings, or reference sheets such as those used for castings, which inspection software implements as configurable rules \cite{vgporosity}. Translating these criteria into executable checks is the inspection counterpart of the workshop's motivating example, generating PLC code from control narratives \cite{fakih2024llm4plc}: the output acts on physical products, and an error ships a defective part or scraps a good one.
+
+The difficulty is rarely the code. It is that the criteria are often underspecified in ways an expert resolves from context. Pore size is a case in point. The BDG reference sheet P~202 for castings defines two pore diameters on a 2D section, the diameter of a circle of equal area and the pore length (maximum Feret diameter), and makes the pore length the default when the diameter symbol carries no subscript \cite{bdg_p202}; the convention has to be stated for a limit to be unambiguous. In 3D CT data the analogous choice is between the diameter of the volume-equivalent sphere and the maximum Feret diameter \cite{vgporosity}. A limit ``per reference volume'' may apply to a fixed grid or to a window placed anywhere. ``Clustered porosity'' and ``near the surface'' are frequently left undefined. Even comparing a measurement against a limit is ambiguous unless the rounding convention is stated; ASTM E29 notes that the choice between its absolute and rounding methods is arbitrary and must be specified \cite{astm_e29}. An LLM asked to write the check may pick one reading without saying so. The code runs, the tests the model writes for itself pass, and the decision boundary has silently moved.
+
+A natural response is to prompt the copilot to state its assumptions or to ask when unsure. We test how far that goes. (1) Do current LLMs translate fully specified porosity criteria into correct checks? (2) On ambiguous criteria, do they state their reading unprompted, and does prompting change that? (3) When they state it, do they mark which choices matter, and how much do those choices change accept/reject verdicts?
+
+\paragraph{Contributions.} (i) \textbf{Spec2Check}, a benchmark of 45 porosity acceptance criteria in four tiers, with executable references for two or three author-defined plausible readings of each of the 21 ambiguous criteria and generated test parts that include boundary cases and reading-discriminating cases. (ii) An evaluation of three frontier LLMs under five prompts: three wordings of a plain request, a request that also asks for an assumption list, and one that allows clarifying questions. (iii) Evidence that prompting makes assumptions visible but not prioritized, and an execution-based review that finds the consequential ones: running alternative readings and independently generated checks on a shared synthetic population.
+
+\section{Related Work}
+LLMs have been applied to manufacturing code with external verification: PLC programs checked by model checkers \cite{fakih2024llm4plc}, self-corrected G-code \cite{abdelaal2025gllm}, and logical anomaly detection rules generated as Python \cite{zhang2025logicode}. Vision-language models extract tolerances and other annotations from engineering drawings \cite{khan2024drawing}. The closest pattern outside manufacturing is automated compliance checking, where LLMs translate building regulations \cite{fuchs2024building,chen2025arceak} or financial rules \cite{li2025compliance} into executable checks. In general code generation, models rarely ask clarifying questions when a task is ambiguous: on HumanEvalComm they produced code instead of asking in over 60\% of ambiguous cases \cite{wu2024humanevalcomm}, and clarification frameworks such as ClarifyGPT detect ambiguity through inconsistent generations \cite{mu2024clarifygpt}. Consistency-based detection cannot find a default that all generations share; we compare generated checks with independently specified readings instead, and measure the effect on verdicts. We are not aware of work that evaluates LLM-generated acceptance checks for CT inspection, or that measures the effect of silent interpretation choices on accept/reject verdicts.
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{@{}lllllrr@{}}
+\toprule
+ & & & & & \multicolumn{1}{c}{Readings} & \multicolumn{1}{c}{Generated} \\
+ID & Ambiguity & Our readings & Implemented (of 36) & c/a/f & max & med / max \\
+\midrule
+4-01 & size measure & $d_\mathrm{eq}$ / max Feret & Feret 35, $d_\mathrm{eq}$ 1 & 36/0/0 & 45\% & 0 / 45\% \\
+4-02 & zone membership & centroid / any overlap & overlap 22, centroid 2, name$^c$ 12 & 36/0/0 & 3\% & 3 / 90\%$^a$ \\
+4-03 & reference volume & sliding / fixed grid & sliding 36 & 36/0/0 & 5\% & 0 / 1\% \\
+4-04 & spacing & centre / edge & edge 35, centre 1 & 36/0/0 & 2\% & 0 / 4\% \\
+4-05 & porosity scope & whole part / per zone & whole part 36 & 36/0/0 & 1\% & 0 / 0\% \\
+4-06 & ``near the surface'' & 0.5 / 1.0 / 2.0\,mm & 0.5\,mm 18, 1.0\,mm 3 & 21/7/8 & 25\% & 11 / 30\% \\
+4-07 & reporting precision & absolute / rounded & rounded 36 & 36/0/0 & 2\% & 0 / 0\% \\
+4-08 & ``clustered'' & three definitions & own definitions & 19/6/11 & 19\% & 8 / 28\% \\
+4-09 & wall thickness & local / nominal & local 36 & 36/0/0 & 3\% & 0 / 0\% \\
+4-10 & detection limit & all / $\ge$0.05 / $\ge$0.10\,mm & all pores 27 & 27/6/3 & 12\% & 0 / 0\% \\
+4-11 & ``aligned'' & tolerance, length & own definitions & 26/1/9 & 3\% & 2 / 44\% \\
+4-12 & ``at sealing surf.'' & zone / open / near & whole zone 36 & 36/0/0 & 4\% & 0 / 2\% \\
+4-13 & shrinkage vs gas$^b$ & sphericity $<$0.5 / 0.6 / 0.7 & $<$0.5 36 & 36/0/0 & 9\% & 0 / 0\% \\
+4-14 & distance to surface & boundary / centre & boundary 36 & 36/0/0 & 4\% & 0 / 0\% \\
+4-15 & reference area & 2D area / 3D volume & 2D 7, 3D 1 & 20/1/13$^d$ & 0.3\% & 0.4 / 19\% \\
+4-16 & ``per machined zone'' & per box / per name & per box 36 & 36/0/0 & 0.3\% & 0 / 23\%$^a$ \\
+4-17 & spacing diameter & larger / smaller / mean & larger 36 & 36/0/0 & 2\% & 0 / 0\% \\
+4-18 & meas.\ uncertainty & ignore / conf. / nonconf. & prove conf. 36 & 36/0/0 & 25\% & 0 / 0\% \\
+4-19 & average size & $d_\mathrm{eq}$ / vol.-wtd / Feret & mean $d_\mathrm{eq}$ 28, Feret 8 & 36/0/0 & 50\% & 0 / 50\% \\
+4-20 & density & whole part / any 1\,cm cube & whole part 35 & 35/0/1 & 10\% & 0 / 0\% \\
+4-21 & zone porosity & zone / part volume & zone volume 31 & 36/0/0 & 0.4\% & 0.1 / 22\%$^a$ \\
+\bottomrule
+\end{tabular}
+\caption{Ambiguous criteria over all coding conditions (3 models $\times$ 4 prompts $\times$ 3 samples). \emph{c/a/f}: responses with a usable check, clarification requests, and checks that raised errors on more than 5\% of parts (mostly deliberate refusals to decide). \emph{Readings max}: largest disagreement between our reference readings; \emph{Generated med/max}: median and maximum disagreement between pairs of generated checks; both on the synthetic population of 4{,}000 parts. $^a$Implementation or identifier errors rather than differences of reading (see text). $^b$Reading cued by the schema. $^c$Checks that looked for a zone named ``sealing zone''; the data name it ``sealing''. $^d$Plus two Gemini generations truncated at the output-token limit.}
+\label{tab:readings}
+\end{table*}
+
+\section{The Spec2Check Benchmark}
+\paragraph{Data model.} A part is a dictionary with the part volume, a nominal wall thickness, named inspection zones (axis-aligned boxes, possibly overlapping), and a list of pores. Each pore has a centroid, a bounding box, volume, equivalent diameter, maximum Feret diameter, sphericity, distance from the pore boundary to the outer surface, and the local wall thickness. These fields mirror the output of CT porosity analysis \cite{vgporosity}. The schema is given to the model verbatim. Its comment on sphericity notes that shrinkage pores are typically below 0.5, which cues one reading of criterion 4-13; we report that criterion but do not count its result as a model default.
+
+\paragraph{Criteria.} Tier~1 (8 criteria) states a single limit (e.g., ``reject the part if any pore with sphericity below 0.40 has a maximum Feret diameter larger than 0.30\,mm''). Tier~2 (8) adds zones and conditional limits, such as zone precedence or limits scaled by local wall thickness. Tier~3 (8) requires aggregate or spatial reasoning that is fully specified but easy to get wrong: a cube of fixed size placed anywhere, transitive clusters, a nearest-rank percentile, a density per cubic centimetre. Tier~4 (21) is ambiguous (Table~\ref{tab:readings}). Each Tier~4 criterion has two or three executable readings that we judged a competent engineer could defend, and modelled on recurring sources of ambiguity in inspection practice: which size measure applies, how zone membership and reference areas are defined, how a measurement is compared with a limit given rounding or measurement uncertainty \cite{astm_e29,iso14253}, and terms such as ``clustered'', ``aligned'' or ``near the surface'' that are often left undefined. The criteria are paraphrased and invented in the style of industrial specifications; none is copied from a standard.
+
+\paragraph{Development.} In a pilot run, some generated checks raised errors or deviated from our references on fully specified criteria. Inspection showed that those criteria did not say what happens when a part lacks a named zone, or whether a single pore counts as a cluster. We added one sentence to eight fully specified criteria and one ambiguous criterion (4-02) and re-ran all models on the nine; all results reported here use the finalized criteria.
+
+\paragraph{Test parts.} For every criterion we generate 400 random parts whose pore counts, size scales, clustering, part size and zone layouts vary, so that each reference accepts between 41\% and 99\% of them. We add up to 120 boundary parts in which one pore attribute is set exactly to a threshold in the criterion (e.g., an equivalent diameter of exactly 0.50\,mm), and, for Tier~4, 60 parts on which the readings disagree. A generated check passes a fully specified criterion only if it matches the reference on every part. For an ambiguous criterion we record which reading it implements: the reading it matches on at least 95\% of the discriminating parts, or ``other''.
+
+\paragraph{Operational impact.} We sample a synthetic population of 4{,}000 parts from a production-like distribution (about ten pores per part, lognormal sizes around 0.12\,mm). For each ambiguous criterion we report the share of these parts on which its reference readings disagree, and we also run every generated check on the same parts and report how often pairs of generated checks disagree.
+
+\section{Experimental Setup}
+We evaluate Claude Opus 5.5 (effort \emph{medium}), GPT-5.6 Sol (reasoning effort \emph{medium}) and Gemini 4 Neon (default thinking) through their APIs, with three samples per criterion and condition (1{,}593 responses). Each model receives the schema, the criterion, and an instruction to return a \texttt{check(part)} function in a code block. In the \emph{plain} condition that is all, as a copilot is often used; for ambiguous criteria we use three different wordings of this request. In the \emph{assumptions} condition the prompt also asks for an \texttt{ASSUMPTIONS:} list of every interpretation choice. In the \emph{clarify} condition it further says: if the criterion is ambiguous or underspecified in a way that could change the verdict, reply only with clarifying questions. Generated code runs in a separate Python process with only the standard library and no credentials.
+
+For each response with code to an ambiguous criterion, two LLM judges (Claude Haiku 5.5 and GPT-5.6 Terra), each run three times with a majority vote, answer two questions about the ambiguous point only. \emph{States}: does the response say, anywhere a reader would see it (prose, assumption list, docstring or comment), which interpretation it used? \emph{Flags}: does it say that the criterion is ambiguous on this point, or name an alternative reading? The judges agreed on 736 of 760 \emph{states} labels and 709 of 760 \emph{flags} labels; we report both judges where they differ. Because the samples of a criterion are correlated, we give 95\% intervals from a bootstrap over criteria.
+
+\section{Results}
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & Claude & GPT & Gemini \\
+\midrule
+Clear criteria, tests passed & 144/144 & 144/144 & 144/144 \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Clarify condition: asked instead of coding}} \\
+\quad ambiguous criteria & 54/63 & 54/63 & 54/63 \\
+\quad clear criteria & 1/72 & 6/72 & 0/72 \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Assumptions condition, ambiguous criteria}} \\
+\quad interpretation not stated & 0/63 & 3/63 & 0/63 \\
+\quad ambiguity flagged & 45--48 & 5--6 & 34--40 \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Plain condition (3 wordings), ambiguous criteria}} \\
+\quad interpretation not stated & 0--2 & 24--38 & 8--28 \\
+\quad ambiguity flagged or asked & 57--58 & 10--19 & 12--24 \\
+\bottomrule
+\end{tabular}
+\caption{Main results; counts out of 63 responses (21 ambiguous criteria, three samples) unless shown. Ranges span the two judges and, in the plain condition, the three wordings.}
+\label{tab:main}
+\end{table}
+
+
+
+\paragraph{Fully specified criteria.} On the finalized criteria, all 432 checks generated for the 24 fully specified criteria under the plain and assumptions prompts passed their test suites, including boundary parts at exact thresholds and aggregate rules such as cubes placed anywhere and nearest-rank percentiles (Table~\ref{tab:main}).
+
+\paragraph{Unprompted baseline.} With the original plain wording, Claude left its interpretation unstated in 2 of 63 responses (95\% interval over criteria 0--10\%), GPT in 36--38 (40--79\%) and Gemini in 25--28 (24--63\%). Across the two other wordings the rates were 0--1, 24--34 and 8--25 of 63, so wording changes the rates but not the ordering. GPT's silent choices spread over 10--15 of 21 criteria and Gemini's over 5--12. Gemini often declined to write code for openly undefined terms and asked instead.
+
+\paragraph{Prompting makes choices visible.} When explicitly instructed to ask about verdict-changing ambiguity, each model returned clarifying questions instead of code on 54 of 63 ambiguous-criterion prompts and on at most 6 of 72 clear ones. We did not score whether answering each question would resolve the intended ambiguity. Their questions were specific, for example whether the 0.40\,mm limit applies to the equivalent or the maximum Feret diameter, because ``for irregular shrinkage pores these can differ greatly''. When asked to list assumptions, 186 of 189 responses stated their interpretation of the ambiguous point.
+
+\paragraph{Stating a choice is not flagging it.} Under the assumptions prompt, lists held a median of 10 items for Claude and 5 for GPT and Gemini (range 2--14), including routine ones such as input validity and inclusive boundaries. Because the prompt asks for every interpretation choice, listing a reading already marks it as a choice in a weak sense; what singles out the consequential one is saying that the criterion is ambiguous on that point or naming the alternative, which is what our \emph{flags} label records. For measurement uncertainty (a 0.30\,mm limit with a stated uncertainty of 0.05\,mm), every implemented check required a measurement to prove conformance, and all 27 plain responses stated this rule, yet only 10 of 27 flagged it as a choice; the alternative rules disagree on 24.6\% of parts. More broadly, in the assumptions condition GPT stated its interpretation almost every time but said the criterion was ambiguous in only 5--6 of 63 responses, against 45--48 for Claude and 34--40 for Gemini. An engineer reading an assumption list without such a flag may have little signal that this rule, rather than the routine items beside it, deserves review.
+
+\paragraph{Silent choices change verdicts.} Without the prompt, silent choices are consequential. Pore density is the clearest case. All implemented checks computed density over the whole part, and 7--14 of the 27 plain-prompt responses did so without saying so, depending on the judge. Whole-part and local (1\,cm cube) density rules disagree on 9.9\% of the synthetic population. Zone membership is similar: 15 of 27 plain responses (7 from GPT, 8 from Gemini) gave no indication of how they assigned pores to the zone. For the average pore size, 7--11 plain responses were silent, including up to 4 that averaged the Feret diameter, a reading that disagrees with the equivalent-diameter average on 50\% of parts. That magnitude depends on the synthetic population: raising the median simulated pore size from 0.12 to 0.15\,mm lowers it to 22\%, while the density disagreement stays at 9.9\%.
+
+\paragraph{Readings or implementations?} Running the generated checks themselves (Table~\ref{tab:readings}) separates two problems. For most criteria the median pair of generated checks agrees on every part. Where pairs disagree, the cause is either a difference of reading or an implementation error. For the average size, two correctly implemented readings disagree on 50\% of parts, which only an engineer can resolve by clarifying the specification. Agreement is no guarantee either: for pore spacing (4-17) all 36 checks scaled the required distance by the larger pore, which departs from the convention of P~202, whose 2D edge-distance criterion uses the smaller one \cite{bdg_p202}. On such shared defaults (4-17, 4-18) the generated checks disagree on no part, so comparing them with each other cannot reveal the choice; only the alternative readings do. Zone membership shows a third problem, an identifier mismatch. Criterion 4-02 refers to ``the sealing zone'', while the schema only says that a zone has a string name; the canonical value, ``sealing'', appears in the data but not in the prompt. All twelve GPT checks looked for a zone named ``sealing zone''. Eleven therefore accepted all 4{,}000 parts, and one, which treated a missing zone as a violation, disagreed with every correct any-overlap check on 75.8\% of parts. The prompt did not resolve the name, so the failure is shared between the benchmark and the model; it is also typical of factory integration, where the term on a drawing and the field in the inspection software differ. Because accepting every part coincides with the lenient reading on our discriminating parts, our reading classifier had first labelled these checks ``centroid''; only execution on the full population exposed the mismatch. For zone porosity and per-zone counts, some checks read our clarifying sentence ``a part without a zone of that name has no pores in it'' as a requirement that such parts contain no pores. That is a new ambiguity we introduced while removing another, and it is the kind of error that tests on discriminating parts alone did not reveal.
+
+\section{Discussion and Limitations}
+Prompting well is necessary and, for visibility, largely sufficient: one paragraph of prompt separates a copilot that silently commits to a reading from one that states it, and the models differ in what they do without that paragraph. It is not sufficient for review. A list of five to ten assumptions in which the consequential one is not marked, as was almost always the case for GPT and in a quarter to nearly half of cases for the others, still leaves the engineer to work out which choice to query; a shared default is stated as confidently as a trivial one; and an identifier mismatch is not an ambiguity at all. Two practical consequences follow. An inspection copilot should be evaluated on whether it marks which interpretation choices change verdicts, not only on whether it lists them or whether its code passes the tests it writes for itself, since those tests encode the same assumption. And execution offers two review aids with different reach. Running independently generated checks against each other on the same parts is automatic and exposes implementation errors that a single check's own tests would miss, but not shared defaults. Showing the engineer the few parts on which alternative readings disagree could turn a silent choice, including a shared default, into an explicit one, but those readings must first be written by someone who knows the domain; we wrote ours by hand and did not measure that cost.
+
+Our study has limits. The 21 ambiguous criteria and their readings were written by the author and are not a survey of real specifications. Parts are synthetic pore tables rather than exports from real scans, so disagreement rates depend on the synthetic population and indicate magnitude only. We evaluate one configuration per model, three samples per criterion and condition, and the \emph{flags} labels depend partly on the judge. The two judges agree closely (Cohen's $\kappa$ 0.91 for \emph{states}, 0.86 for \emph{flags}), and the GPT judge credits Claude with nearly as many flags as the Claude judge does (45 and 48 of 63). The author labeled a random sample of 60 responses (20 per model), blind to model and judge labels; agreement with the two judges was 57 and 58 of 60 for \emph{states} ($\kappa$ 0.86, 0.91) and 54 and 57 of 60 for \emph{flags} ($\kappa$ 0.80, 0.90). Most disagreements credited a flag the judges missed, so the flag counts may be slight underestimates. \emph{Flags} records whether a response calls a point ambiguous or names an alternative, not how a model ranks its choices, so a terse writing style may lower it. Whether flagged or unflagged choices change what an engineer actually notices is a human outcome we did not measure.
+
+\bibliography{refs}
+
+\end{document}

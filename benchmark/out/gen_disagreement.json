@@ -1,0 +1,401 @@
+{
+ "T4-01": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.45025,
+  "gen_median": 0.0,
+  "gen_max": 0.45025,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-01|direct|0",
+    "feret_max"
+   ],
+   [
+    "gpt-5.6-sol|T4-01|direct|0",
+    "d_eq"
+   ]
+  ]
+ },
+ "T4-02": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.03175,
+  "gen_median": 0.03175,
+  "gen_max": 0.8995,
+  "worst_pair": [
+   [
+    "gpt-5.6-sol|T4-02|direct|0",
+    "centroid"
+   ],
+   [
+    "gpt-5.6-sol|T4-02|plain2|0",
+    "any_overlap"
+   ]
+  ]
+ },
+ "T4-03": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.054,
+  "gen_median": 0.0,
+  "gen_max": 0.0075,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-03|direct|0",
+    "sliding"
+   ],
+   [
+    "claude-opus-5-5|T4-03|plain|2",
+    "sliding"
+   ]
+  ]
+ },
+ "T4-04": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.017,
+  "gen_median": 0.0,
+  "gen_max": 0.0355,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-04|direct|0",
+    "edge"
+   ],
+   [
+    "gpt-5.6-sol|T4-04|plain2|1",
+    "center"
+   ]
+  ]
+ },
+ "T4-05": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.00475,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-05|direct|0",
+    "global"
+   ],
+   [
+    "gpt-5.6-sol|T4-05|direct|0",
+    "global"
+   ]
+  ]
+ },
+ "T4-06": {
+  "n_code": 21,
+  "asks": 7,
+  "truncated": 0,
+  "fails": 8,
+  "ref_max": 0.25175,
+  "gen_median": 0.11075,
+  "gen_max": 0.2995,
+  "worst_pair": [
+   [
+    "gemini-4-neon|T4-06|direct|0",
+    "near_1.0"
+   ],
+   [
+    "gpt-5.6-sol|T4-06|plain|0",
+    "near_0.5"
+   ]
+  ]
+ },
+ "T4-07": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.02275,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-07|direct|0",
+    "rounded"
+   ],
+   [
+    "gpt-5.6-sol|T4-07|direct|0",
+    "rounded"
+   ]
+  ]
+ },
+ "T4-08": {
+  "n_code": 19,
+  "asks": 6,
+  "truncated": 0,
+  "fails": 11,
+  "ref_max": 0.18475,
+  "gen_median": 0.07825,
+  "gen_max": 0.28225,
+  "worst_pair": [
+   [
+    "gpt-5.6-sol|T4-08|direct|2",
+    "other"
+   ],
+   [
+    "claude-opus-5-5|T4-08|direct|1",
+    "gap_lt_size"
+   ]
+  ]
+ },
+ "T4-09": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.025,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-09|direct|0",
+    "local"
+   ],
+   [
+    "gpt-5.6-sol|T4-09|direct|0",
+    "local"
+   ]
+  ]
+ },
+ "T4-10": {
+  "n_code": 27,
+  "asks": 6,
+  "truncated": 0,
+  "fails": 3,
+  "ref_max": 0.11975,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-10|direct|0",
+    "count_all"
+   ],
+   [
+    "claude-opus-5-5|T4-10|direct|1",
+    "count_all"
+   ]
+  ]
+ },
+ "T4-11": {
+  "n_code": 26,
+  "asks": 1,
+  "truncated": 0,
+  "fails": 9,
+  "ref_max": 0.0285,
+  "gen_median": 0.0235,
+  "gen_max": 0.443,
+  "worst_pair": [
+   [
+    "gpt-5.6-sol|T4-11|direct|2",
+    "tol0.5_feret"
+   ],
+   [
+    "gemini-4-neon|T4-11|direct|2",
+    "other"
+   ]
+  ]
+ },
+ "T4-12": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.04075,
+  "gen_median": 0.0,
+  "gen_max": 0.01875,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-12|direct|0",
+    "whole_zone"
+   ],
+   [
+    "gpt-5.6-sol|T4-12|direct|1",
+    "whole_zone"
+   ]
+  ]
+ },
+ "T4-13": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.08875,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-13|direct|0",
+    "shrink<0.5"
+   ],
+   [
+    "claude-opus-5-5|T4-13|direct|1",
+    "shrink<0.5"
+   ]
+  ]
+ },
+ "T4-14": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.0395,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-14|direct|0",
+    "boundary"
+   ],
+   [
+    "claude-opus-5-5|T4-14|direct|1",
+    "boundary"
+   ]
+  ]
+ },
+ "T4-15": {
+  "n_code": 20,
+  "asks": 1,
+  "truncated": 2,
+  "fails": 13,
+  "ref_max": 0.00275,
+  "gen_median": 0.004125,
+  "gen_max": 0.18925,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-15|direct|2",
+    "projected_area"
+   ],
+   [
+    "claude-opus-5-5|T4-15|plain2|1",
+    "cube_volume"
+   ]
+  ]
+ },
+ "T4-16": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.00325,
+  "gen_median": 0.0,
+  "gen_max": 0.22775,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-16|direct|0",
+    "per_box"
+   ],
+   [
+    "gpt-5.6-sol|T4-16|direct|0",
+    "per_box"
+   ]
+  ]
+ },
+ "T4-17": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.017,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-17|direct|0",
+    "larger"
+   ],
+   [
+    "claude-opus-5-5|T4-17|direct|1",
+    "larger"
+   ]
+  ]
+ },
+ "T4-18": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.24575,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-18|direct|0",
+    "prove_conformance"
+   ],
+   [
+    "claude-opus-5-5|T4-18|direct|1",
+    "prove_conformance"
+   ]
+  ]
+ },
+ "T4-19": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.50375,
+  "gen_median": 0.0,
+  "gen_max": 0.50375,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-19|direct|0",
+    "mean_deq"
+   ],
+   [
+    "claude-opus-5-5|T4-19|plain2|2",
+    "mean_feret"
+   ]
+  ]
+ },
+ "T4-20": {
+  "n_code": 35,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 1,
+  "ref_max": 0.099,
+  "gen_median": 0.0,
+  "gen_max": 0.0,
+  "worst_pair": [
+   [
+    "claude-opus-5-5|T4-20|direct|0",
+    "global"
+   ],
+   [
+    "claude-opus-5-5|T4-20|direct|1",
+    "global"
+   ]
+  ]
+ },
+ "T4-21": {
+  "n_code": 36,
+  "asks": 0,
+  "truncated": 0,
+  "fails": 0,
+  "ref_max": 0.0035,
+  "gen_median": 0.00125,
+  "gen_max": 0.22375,
+  "worst_pair": [
+   [
+    "gpt-5.6-sol|T4-21|direct|0",
+    "zone_volume"
+   ],
+   [
+    "claude-opus-5-5|T4-21|plain2|2",
+    "zone_volume"
+   ]
+  ]
+ }
+}

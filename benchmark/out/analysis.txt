@@ -1,0 +1,101 @@
+== Clear criteria (assumptions + plain): correct, wrong verdicts, errors ==
+  claude-opus-5-5    correct 144/144  wrong-verdict 0  error 0
+  gpt-5.6-sol        correct 144/144  wrong-verdict 0  error 0
+  gemini-4-neon      correct 144/144  wrong-verdict 0  error 0
+
+== Clarify condition: asked ==
+  claude-opus-5-5    ambiguous 54/63   clear 1/72
+  gpt-5.6-sol        ambiguous 54/63   clear 6/72
+  gemini-4-neon      ambiguous 54/63   clear 0/72
+
+== SILENT (code, interpretation not stated); per judge (majority of 3 runs); 95% CI over criteria ==
+  direct  claude-opus-5-5    claude: 0/63 [0.00,0.00] crit 0/21 | gpt: 0/63 [0.00,0.00] crit 0/21
+  direct  gpt-5.6-sol        claude: 3/63 [0.00,0.14] crit 1/21 | gpt: 3/63 [0.00,0.14] crit 1/21
+  direct  gemini-4-neon      claude: 0/63 [0.00,0.00] crit 0/21 | gpt: 0/63 [0.00,0.00] crit 0/21
+  plain   claude-opus-5-5    claude: 2/63 [0.00,0.10] crit 1/21 | gpt: 2/63 [0.00,0.10] crit 1/21
+  plain   gpt-5.6-sol        claude: 36/63 [0.40,0.75] crit 15/21 | gpt: 38/63 [0.41,0.79] crit 15/21
+  plain   gemini-4-neon      claude: 25/63 [0.24,0.57] crit 12/21 | gpt: 28/63 [0.25,0.63] crit 12/21
+  plain2  claude-opus-5-5    claude: 0/63 [0.00,0.00] crit 0/21 | gpt: 1/63 [0.00,0.05] crit 1/21
+  plain2  gpt-5.6-sol        claude: 24/63 [0.22,0.56] crit 11/21 | gpt: 25/63 [0.21,0.59] crit 10/21
+  plain2  gemini-4-neon      claude: 8/63 [0.03,0.24] crit 5/21 | gpt: 13/63 [0.08,0.35] crit 7/21
+  plain3  claude-opus-5-5    claude: 0/63 [0.00,0.00] crit 0/21 | gpt: 0/63 [0.00,0.00] crit 0/21
+  plain3  gpt-5.6-sol        claude: 32/63 [0.32,0.70] crit 13/21 | gpt: 34/63 [0.35,0.73] crit 13/21
+  plain3  gemini-4-neon      claude: 21/63 [0.16,0.51] crit 9/21 | gpt: 25/63 [0.22,0.59] crit 11/21
+
+== UNFLAGGED (code, ambiguity not mentioned); per judge (majority of 3 runs); 95% CI over criteria ==
+  direct  claude-opus-5-5    claude: 15/63 [0.11,0.40] crit 9/21 | gpt: 18/63 [0.16,0.43] crit 11/21
+  direct  gpt-5.6-sol        claude: 58/63 [0.83,1.00] crit 21/21 | gpt: 57/63 [0.78,1.00] crit 20/21
+  direct  gemini-4-neon      claude: 29/63 [0.30,0.63] crit 14/21 | gpt: 23/63 [0.19,0.56] crit 10/21
+  plain   claude-opus-5-5    claude: 6/63 [0.02,0.19] crit 4/21 | gpt: 6/63 [0.02,0.19] crit 4/21
+  plain   gpt-5.6-sol        claude: 53/63 [0.67,0.98] crit 18/21 | gpt: 53/63 [0.67,0.98] crit 18/21
+  plain   gemini-4-neon      claude: 50/63 [0.62,0.95] crit 17/21 | gpt: 50/63 [0.62,0.95] crit 17/21
+  plain2  claude-opus-5-5    claude: 5/63 [0.00,0.17] crit 3/21 | gpt: 5/63 [0.00,0.17] crit 3/21
+  plain2  gpt-5.6-sol        claude: 45/63 [0.54,0.87] crit 16/21 | gpt: 44/63 [0.51,0.87] crit 16/21
+  plain2  gemini-4-neon      claude: 41/63 [0.48,0.83] crit 16/21 | gpt: 39/63 [0.43,0.81] crit 15/21
+  plain3  claude-opus-5-5    claude: 6/63 [0.00,0.22] crit 3/21 | gpt: 5/63 [0.00,0.17] crit 3/21
+  plain3  gpt-5.6-sol        claude: 50/63 [0.63,0.94] crit 18/21 | gpt: 51/63 [0.65,0.95] crit 18/21
+  plain3  gemini-4-neon      claude: 48/63 [0.59,0.92] crit 17/21 | gpt: 48/63 [0.59,0.92] crit 17/21
+
+== FLAGGED OR ASKED (Table 2): coded and flagged, or a clarification request; truncated generations excluded ==
+  direct  claude-opus-5-5    claude: 48/63 | gpt: 45/63
+  direct  gpt-5.6-sol        claude: 5/63 | gpt: 6/63
+  direct  gemini-4-neon      claude: 34/63 | gpt: 40/63
+  plain   claude-opus-5-5    claude: 57/63 | gpt: 57/63
+  plain   gpt-5.6-sol        claude: 10/63 | gpt: 10/63
+  plain   gemini-4-neon      claude: 12/63 | gpt: 12/63
+  plain2  claude-opus-5-5    claude: 58/63 | gpt: 58/63
+  plain2  gpt-5.6-sol        claude: 18/63 | gpt: 19/63
+  plain2  gemini-4-neon      claude: 22/63 | gpt: 24/63
+  plain3  claude-opus-5-5    claude: 57/63 | gpt: 58/63
+  plain3  gpt-5.6-sol        claude: 13/63 | gpt: 12/63
+  plain3  gemini-4-neon      claude: 14/63 | gpt: 14/63
+
+== Judge agreement (majority labels) ==
+  states: 736/760
+  flags: 709/760
+
+== Readings implemented, by model and condition ==
+  T4-01: cla/d {'feret_max': 3}  cla/p {'feret_max': 3}  gpt/d {'d_eq': 1, 'feret_max': 2}  gpt/p {'feret_max': 3}  gem/d {'feret_max': 3}  gem/p {'feret_max': 3}
+  T4-02: cla/d {'any_overlap': 3}  cla/p {'any_overlap': 3}  gpt/d {'centroid': 3}  gpt/p {'centroid': 3}  gem/d {'any_overlap': 3}  gem/p {'centroid': 1, 'any_overlap': 2}
+  T4-03: cla/d {'sliding': 3}  cla/p {'sliding': 3}  gpt/d {'sliding': 3}  gpt/p {'sliding': 3}  gem/d {'sliding': 3}  gem/p {'sliding': 3}
+  T4-04: cla/d {'edge': 3}  cla/p {'edge': 3}  gpt/d {'edge': 3}  gpt/p {'edge': 3}  gem/d {'edge': 3}  gem/p {'edge': 3}
+  T4-05: cla/d {'global': 3}  cla/p {'global': 3}  gpt/d {'global': 3}  gpt/p {'global': 3}  gem/d {'global': 3}  gem/p {'global': 3}
+  T4-06: cla/d {'near_0.5': 3}  cla/p {'near_0.5': 3}  gpt/d {'near_0.5': 3}  gpt/p {'near_0.5': 1, 'other': 2}  gem/d {'near_1.0': 3}  gem/p {'no code': 3}
+  T4-07: cla/d {'rounded': 3}  cla/p {'rounded': 3}  gpt/d {'rounded': 3}  gpt/p {'rounded': 3}  gem/d {'rounded': 3}  gem/p {'rounded': 3}
+  T4-08: cla/d {'other': 2, 'gap_lt_size': 1}  cla/p {'other': 3}  gpt/d {'other': 3}  gpt/p {'other': 3}  gem/d {'other': 3}  gem/p {'no code': 3}
+  T4-09: cla/d {'local': 3}  cla/p {'local': 3}  gpt/d {'local': 3}  gpt/p {'local': 3}  gem/d {'local': 3}  gem/p {'local': 3}
+  T4-10: cla/d {'count_all': 3}  cla/p {'count_all': 3}  gpt/d {'count_all': 3}  gpt/p {'count_all': 3}  gem/d {'count_all': 3}  gem/p {'no code': 3}
+  T4-11: cla/d {'other': 3}  cla/p {'other': 3}  gpt/d {'other': 2, 'tol0.5_feret': 1}  gpt/p {'other': 3}  gem/d {'other': 3}  gem/p {'other': 2, 'no code': 1}
+  T4-12: cla/d {'whole_zone': 3}  cla/p {'whole_zone': 3}  gpt/d {'whole_zone': 3}  gpt/p {'whole_zone': 3}  gem/d {'whole_zone': 3}  gem/p {'whole_zone': 3}
+  T4-13: cla/d {'shrink<0.5': 3}  cla/p {'shrink<0.5': 3}  gpt/d {'shrink<0.5': 3}  gpt/p {'shrink<0.5': 3}  gem/d {'shrink<0.5': 3}  gem/p {'shrink<0.5': 3}
+  T4-14: cla/d {'boundary': 3}  cla/p {'boundary': 3}  gpt/d {'boundary': 3}  gpt/p {'boundary': 3}  gem/d {'boundary': 3}  gem/p {'boundary': 3}
+  T4-15: cla/d {'other': 2, 'projected_area': 1}  cla/p {'no code': 2, 'other': 1}  gpt/d {'projected_area': 3}  gpt/p {'other': 3}  gem/d {'other': 3}  gem/p {'other': 2, 'no code': 1}
+  T4-16: cla/d {'per_box': 3}  cla/p {'per_box': 3}  gpt/d {'per_box': 3}  gpt/p {'per_box': 3}  gem/d {'per_box': 3}  gem/p {'per_box': 3}
+  T4-17: cla/d {'larger': 3}  cla/p {'larger': 3}  gpt/d {'larger': 3}  gpt/p {'larger': 3}  gem/d {'larger': 3}  gem/p {'larger': 3}
+  T4-18: cla/d {'prove_conformance': 3}  cla/p {'prove_conformance': 3}  gpt/d {'prove_conformance': 3}  gpt/p {'prove_conformance': 3}  gem/d {'prove_conformance': 3}  gem/p {'prove_conformance': 3}
+  T4-19: cla/d {'mean_deq': 3}  cla/p {'mean_deq': 3}  gpt/d {'mean_deq': 3}  gpt/p {'mean_deq': 3}  gem/d {'mean_deq': 3}  gem/p {'mean_deq': 2, 'mean_feret': 1}
+  T4-20: cla/d {'global': 3}  cla/p {'global': 3}  gpt/d {'global': 3}  gpt/p {'global': 3}  gem/d {'global': 3}  gem/p {'global': 3}
+  T4-21: cla/d {'zone_volume': 2, 'other': 1}  cla/p {'zone_volume': 2, 'other': 1}  gpt/d {'zone_volume': 3}  gpt/p {'zone_volume': 3}  gem/d {'zone_volume': 3}  gem/p {'zone_volume': 3}
+
+== Verdict flips on 4,000 production-like parts ==
+  T4-01: any two readings 0.450; readings models chose ['d_eq', 'feret_max'] -> 0.450
+  T4-02: any two readings 0.032; readings models chose ['any_overlap', 'centroid'] -> 0.032
+  T4-03: any two readings 0.054; readings models chose ['sliding'] -> 0.000
+  T4-04: any two readings 0.017; readings models chose ['center', 'edge'] -> 0.017
+  T4-05: any two readings 0.005; readings models chose ['global'] -> 0.000
+  T4-06: any two readings 0.252; readings models chose ['near_0.5', 'near_1.0'] -> 0.111
+  T4-07: any two readings 0.023; readings models chose ['rounded'] -> 0.000
+  T4-08: any two readings 0.185; readings models chose ['gap_lt_size'] -> 0.000
+  T4-09: any two readings 0.025; readings models chose ['local'] -> 0.000
+  T4-10: any two readings 0.120; readings models chose ['count_all'] -> 0.000
+  T4-11: any two readings 0.029; readings models chose ['tol0.5_feret'] -> 0.000
+  T4-12: any two readings 0.041; readings models chose ['whole_zone'] -> 0.000
+  T4-13: any two readings 0.089; readings models chose ['shrink<0.5'] -> 0.000
+  T4-14: any two readings 0.040; readings models chose ['boundary'] -> 0.000
+  T4-15: any two readings 0.003; readings models chose ['cube_volume', 'projected_area'] -> 0.003
+  T4-16: any two readings 0.003; readings models chose ['per_box'] -> 0.000
+  T4-17: any two readings 0.017; readings models chose ['larger'] -> 0.000
+  T4-18: any two readings 0.246; readings models chose ['prove_conformance'] -> 0.000
+  T4-19: any two readings 0.504; readings models chose ['mean_deq', 'mean_feret'] -> 0.504
+  T4-20: any two readings 0.099; readings models chose ['global'] -> 0.000
+  T4-21: any two readings 0.004; readings models chose ['zone_volume'] -> 0.000

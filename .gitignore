@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+.DS_Store

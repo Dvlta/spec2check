@@ -1,0 +1,21 @@
+60 labeled items
+states: human YES rate 0.75
+  vs claude-haiku-5-5   agree 57/60 (0.95)  kappa 0.86
+  vs gpt-5.6-terra      agree 58/60 (0.97)  kappa 0.91
+  vs judges where they agree: 57/59
+flags: human YES rate 0.53
+  vs claude-haiku-5-5   agree 54/60 (0.90)  kappa 0.80
+  vs gpt-5.6-terra      agree 57/60 (0.95)  kappa 0.90
+  vs judges where they agree: 53/55
+
+Disagreements (item, model, human states/flags, judges):
+  #1 gemini-4-neon|T4-19|direct|0  human True/True  claude True/False  gpt True/True  note: borderline flags: names d_eq vs feret_max as alternative size measure; weighting alternative not named
+  #11 gemini-4-neon|T4-20|direct|1  human True/True  claude True/False  gpt True/True
+  #16 claude-opus-5-5|T4-14|plain2|0  human True/True  claude True/False  gpt True/True
+  #22 gpt-5.6-sol|T4-20|plain3|0  human False/False  claude True/False  gpt False/False
+  #25 gpt-5.6-sol|T4-09|direct|1  human True/True  claude True/False  gpt True/False
+  #32 gemini-4-neon|T4-09|direct|0  human True/True  claude True/False  gpt True/True
+  #38 gpt-5.6-sol|T4-05|direct|1  human True/True  claude True/True  gpt True/False
+  #42 gemini-4-neon|T4-10|plain2|0  human False/True  claude True/True  gpt True/True  note: asks for clarification; code raises until configured
+  #45 gemini-4-neon|T4-08|direct|0  human True/True  claude True/False  gpt True/False  note: borderline flags: names alternatives (2-pore cluster, bbox/feret) without calling the criterion undefined
+  #53 gemini-4-neon|T4-20|plain3|1  human False/False  claude True/False  gpt True/False  note: docstring restates 'the part's pore density' without saying whole part vs window
