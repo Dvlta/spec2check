@@ -1,6 +1,6 @@
 # Spec2Check
 
-Code and data for *Prompting Makes Inspection Copilots State Their Assumptions, but Not Which Ones Matter*
+Code and data for *Spec2Check: Do LLM Inspection Copilots Flag the Assumptions That Change Verdicts?*
 (Leo Sun, AI4Factory workshop at AAAI 2027).
 
 Spec2Check is a benchmark of 45 porosity acceptance criteria for industrial CT inspection. 24 are fully specified;
